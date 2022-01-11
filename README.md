@@ -15,4 +15,4 @@ Since every points have its scalar value, it is possible to draw contour lines a
  to draw coutour line. This is also implemented in package colormap - MeshPanel.java.
  
  ## Fill Contour Plots
- Instead of draw lines through Triangle, we fill colors into those triangles to show the scalar field.
+ Instead of draw lines through Triangle, we fill colors into those triangles to show the scalar field. This is also implemented in package colormap - MeshPanel.java.
