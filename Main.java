@@ -1,7 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
-import vtkLoad.*;
+
 import colormap.*;
+import drawpanel.MeshPanel;
+import vtkload.*;
+
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.util.Scanner;

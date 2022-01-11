@@ -1,8 +1,11 @@
-package colormap;
-import vtkLoad.*;
+package drawpanel;
+import vtkload.*;
 import java.util.ArrayList;
 import java.awt.geom.Point2D;
 import javax.swing.JPanel;
+
+import colormap.ColorMap;
+
 import java.awt.Polygon;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,13 +16,13 @@ import java.awt.Graphics2D;
 public class MeshPanel extends JPanel {
     ArrayList<Point> lines = new ArrayList<Point>();
 
-    ArrayList<vtkLoad.Point> vex;
+    ArrayList<vtkload.Point> vex;
     ArrayList<Point2D> scaledCoord;
     ArrayList<int[]> faces;
     ArrayList<ColorMap> colormap;
     ArrayList<Color> colors;
     int type;
-    public MeshPanel(int width, int height, ArrayList<vtkLoad.Point> points, ArrayList<int[]> faces, ArrayList<ColorMap> colorMap, int type){
+    public MeshPanel(int width, int height, ArrayList<vtkload.Point> points, ArrayList<int[]> faces, ArrayList<ColorMap> colorMap, int type){
         setBackground(Color.white);
 
         this.vex = points;
@@ -55,7 +58,6 @@ public class MeshPanel extends JPanel {
         }else{
             renderColorToShape(g);
         }
-        //
     }
 
     private void paintMeshPolygons(Graphics g){
