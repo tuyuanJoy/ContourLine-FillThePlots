@@ -80,7 +80,7 @@ public class MeshPanel extends JPanel {
 
     private void paintContourLine(Graphics g) {
         for (int i = 0; i < colormap.size(); i++) {
-            // for(int i=0; i<50; i++){
+            // for(int i=0; i<8; i++){
             // to determine if the scalar value higher than sandard or not
             checkIsovalueOnEachPoint(i);
             // for every triangle, connect to the middle of their edge(if 0-1 or 1-0) to
@@ -91,7 +91,7 @@ public class MeshPanel extends JPanel {
 
     private void renderColorToShape(Graphics g) {
         for (int i = 0; i < colormap.size(); i++) {
-            // for(int i=0; i<50; i++){
+            // for(int i=0; i<8; i++){
             // to determine if the scalar value higher than sandard or not
             checkIsovalueOnEachPoint(i);
             // for every triangle, fill color
@@ -100,15 +100,11 @@ public class MeshPanel extends JPanel {
     }
 
     private void checkIsovalueOnEachPoint(int i) {
-
         for (int j = 0; j < vex.size(); j++) {
-
             vex.get(j).SetisHigh(true);
-
-            // if(vex.get(j).Field() <= i * 0.02) {
+            // if(vex.get(j).Field() <= i * 0.125) {
             if (vex.get(j).Field() <= colormap.get(i).Isovalue()) {
                 vex.get(j).SetisHigh(false);
-                // System.out.println(vex.get(j).Field());
             }
         }
     }
@@ -142,7 +138,6 @@ public class MeshPanel extends JPanel {
                 int x2 = (int) (x[2] + x[1]) / 2;
                 int y2 = (int) (y[2] + y[1]) / 2;
                 g.drawLine(x1, y1, x2, y2);
-                // System.out.println("v1v2 v1v3 "+ x1+ " " +y1 +" " +x2+" "+y2 );
             }
             if (v1 != v2 && v1 != v3) {
                 int x1 = (int) (x[0] + x[1]) / 2;
@@ -150,8 +145,6 @@ public class MeshPanel extends JPanel {
                 int x2 = (int) (x[2] + x[0]) / 2;
                 int y2 = (int) (y[2] + y[0]) / 2;
                 g.drawLine(x1, y1, x2, y2);
-
-                // System.out.println("v1v2 v2v3 "+ x1+ " " +y1 +" " +x2+" "+y2 );
             }
             if (v1 != v3 && v2 != v3) {
                 int x1 = (int) (x[0] + x[2]) / 2;
@@ -159,16 +152,12 @@ public class MeshPanel extends JPanel {
                 int x2 = (int) (x[2] + x[1]) / 2;
                 int y2 = (int) (y[2] + y[1]) / 2;
                 g.drawLine(x1, y1, x2, y2);
-
-                // System.out.println("v1v3 v1v3 "+ x1+ " " +y1 +" " +x2+" "+y2 );
             }
 
         }
     }
 
     private void fillShape(int indexOfColorMap, Graphics g) {
-        // set line color
-        // g.setColor(colormap.get(indexOfColorMap).LineColor());
         boolean v1, v2, v3;
         for (int i = 0; i < faces.size(); i++) {
             int[] face = faces.get(i);
@@ -196,13 +185,10 @@ public class MeshPanel extends JPanel {
 
             g.setColor(tempColor);
             if (v1 != v2 && v2 != v3 || v1 != v2 && v1 != v3 || v1 != v3 && v2 != v3) {
-                // g.drawPolygon(x,y,3);
                 g.fillPolygon(pl);
             }
             if (v1 == v2 == v3) {
-                // g.drawPolygon(x,y,3);
                 g.fillPolygon(pl);
-                // System.out.println("R "+ red + " G "+ green +" B " + blue);
             }
 
         }
