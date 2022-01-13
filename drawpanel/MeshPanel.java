@@ -3,8 +3,12 @@ package drawpanel;
 import vtkload.*;
 import java.util.ArrayList;
 import java.awt.geom.Point2D;
+import java.security.Policy;
+
 import javax.swing.JPanel;
 import colormap.ColorMap;
+import javafx.scene.shape.PolygonBuilder;
+
 import java.awt.Polygon;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -50,32 +54,73 @@ public class MeshPanel extends JPanel {
     }
 
     public void paint(Graphics g) {
-        if (type == 0) {
-            paintMeshPolygons(g);
-        } else if (type == 1) {
-
-            paintContourLine(g);
-        } else {
-            renderColorToShape(g);
+        switch (type){
+            case 0: paintMeshPolygons(g); break;
+            case 1: paintContourLine(g); break;
+            case 2: fillMeshPolygons(g); break;
+            case 3: renderColorToShapeByReplace(g); break;
+            default: System.out.println("Please input integer number between 0-3");
         }
     }
 
     private void paintMeshPolygons(Graphics g) {
         g.setColor(Color.black);
         for (int i = 0; i < faces.size(); i++) {
-            int[] face = faces.get(i);
-            int[] x = new int[3];
-            int[] y = new int[3];
-
-            x[0] = (int) scaledCoord.get(face[0]).getX();
-            x[1] = (int) scaledCoord.get(face[1]).getX();
-            x[2] = (int) scaledCoord.get(face[2]).getX();
-            y[0] = (int) scaledCoord.get(face[0]).getY();
-            y[1] = (int) scaledCoord.get(face[1]).getY();
-            y[2] = (int) scaledCoord.get(face[2]).getY();
-
-            g.drawPolygon(x, y, 3);
+            Polygon p = new Polygon();
+            p = getPolygon(i);
+            g.drawPolygon(p);
         }
+    }
+
+    private void fillMeshPolygons(Graphics g) {
+
+        for (int i = 0; i < faces.size(); i++) {
+            Polygon p = new Polygon();
+            int[] face = faces.get(i);
+            double averageScalar;
+            Color averageColor;
+            p = getPolygon(i);
+            double v1, v2, v3;
+            v1 = vex.get(face[0]).Field();
+            v2 = vex.get(face[1]).Field();
+            v3 = vex.get(face[2]).Field();
+            averageScalar = (v1 + v2 + v3) /3;
+            averageColor = findAverageColor(averageScalar);
+            g.setColor(averageColor);
+            g.fillPolygon(p);
+        }
+    }
+    private Polygon getPolygon(int i){
+        Polygon p = new Polygon();
+        int[] face = faces.get(i);
+        int[] x = new int[3];
+        int[] y = new int[3];
+        x[0] = (int) scaledCoord.get(face[0]).getX();
+        x[1] = (int) scaledCoord.get(face[1]).getX();
+        x[2] = (int) scaledCoord.get(face[2]).getX();
+        y[0] = (int) scaledCoord.get(face[0]).getY();
+        y[1] = (int) scaledCoord.get(face[1]).getY();
+        y[2] = (int) scaledCoord.get(face[2]).getY();
+       
+        p.addPoint(x[0], y[0]);
+        p.addPoint(x[1], y[1]);
+        p.addPoint(x[2], y[2]);
+        return p;
+    }
+
+    private Color findAverageColor(double averageScalar){
+        Color averageColor;
+        int id=0;
+        double minDifference = Double.MAX_VALUE;  
+        for (int i = 0; i < colormap.size(); i++) {
+            double isovalue = colormap.get(i).Isovalue();
+            if(Math.abs(averageScalar - isovalue) < minDifference) {
+                minDifference = Math.abs(averageScalar - isovalue);
+                id = i;
+            }
+        }    
+        averageColor = colormap.get(id).LineColor();
+        return averageColor;
     }
 
     private void paintContourLine(Graphics g) {
@@ -89,15 +134,13 @@ public class MeshPanel extends JPanel {
         }
     }
 
-    private void renderColorToShape(Graphics g) {
+    private void renderColorToShapeByReplace(Graphics g) {
         for (int i = 0; i < colormap.size(); i++) {
-            // for(int i=0; i<8; i++){
-            // to determine if the scalar value higher than sandard or not
             checkIsovalueOnEachPoint(i);
-            // for every triangle, fill color
-            fillShape(i, g);
+            fillShapeByReplace(i, g);
         }
     }
+   
 
     private void checkIsovalueOnEachPoint(int i) {
         for (int j = 0; j < vex.size(); j++) {
@@ -157,7 +200,7 @@ public class MeshPanel extends JPanel {
         }
     }
 
-    private void fillShape(int indexOfColorMap, Graphics g) {
+    private void fillShapeByReplace(int indexOfColorMap, Graphics g) {
         boolean v1, v2, v3;
         for (int i = 0; i < faces.size(); i++) {
             int[] face = faces.get(i);
@@ -172,25 +215,24 @@ public class MeshPanel extends JPanel {
             y[2] = (int) scaledCoord.get(face[2]).getY();
 
             Polygon pl = new Polygon();
-            // g.setColor(colors.get(indexOfColorMap));
             pl.addPoint(x[0], y[0]);
             pl.addPoint(x[1], y[1]);
             pl.addPoint(x[2], y[2]);
+
+            Color tempColor = colormap.get(indexOfColorMap).LineColor();
+            g.setColor(tempColor);
 
             v1 = vex.get(face[0]).Ishigh();
             v2 = vex.get(face[1]).Ishigh();
             v3 = vex.get(face[2]).Ishigh();
 
-            Color tempColor = colormap.get(indexOfColorMap).LineColor();
-
-            g.setColor(tempColor);
             if (v1 != v2 && v2 != v3 || v1 != v2 && v1 != v3 || v1 != v3 && v2 != v3) {
                 g.fillPolygon(pl);
             }
             if (v1 == v2 == v3) {
                 g.fillPolygon(pl);
             }
-
+            
         }
     }
 

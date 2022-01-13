@@ -21,7 +21,7 @@ public class Main {
     if (args.length != 1) {
       path = localDir + "/riderr.vtk";
       System.out.println("Haven't detect file name, automatically import vtk file: " + path);
-      System.out.println("Please input number:\n2 Triangle Mesh:0; Contour Line: 1; Color Render: 2");
+      System.out.println("Please input number:\n Triangle Mesh:0; \nContour Line: 1; \n Color Render with Average Color: 2;\n Color Render Replace draw line: 3;\n");
     } else
       path = localDir + "/" + args[0];
 
