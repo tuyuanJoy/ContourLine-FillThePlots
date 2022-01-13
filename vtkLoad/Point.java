@@ -1,5 +1,4 @@
 package vtkload;
-
 import java.awt.geom.Point2D;
 
 public class Point {

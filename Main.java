@@ -18,26 +18,40 @@ public class Main {
 
     String path;
     String localDir = System.getProperty("user.dir");
+
+    //Read info from user
     if (args.length != 1) {
       path = localDir + "/riderr.vtk";
       System.out.println("Haven't detect file name, automatically import vtk file: " + path);
-      System.out.println("Please input number:\n Triangle Mesh:0; \nContour Line: 1; \n Color Render with Average Color: 2;\n Color Render Replace draw line: 3;\n");
+      System.out.println("Please input number:\n Triangle Mesh:0; \n Contour Line: 1; \n Color Render with Average Color: 2;\n Color Render Replace draw line: 3;\n");
     } else
-      path = localDir + "/" + args[0];
-
-    // Read type
+    path = localDir + "/" + args[0];
+    
+    double[] isovalues = new double[0];
     Scanner sc = new Scanner(System.in);
     int type = sc.nextInt();
+
+    if(type == 1){
+      System.out.println("Please input how many contour lines you want?");
+      int count = sc.nextInt();
+  
+      System.out.println("Please input "+ count+" isovalues between range [0,1]");
+      isovalues = new double[count];
+    
+      for(int i=0; i<count; i++){
+        isovalues[i] = sc.nextDouble();
+      }
+    }
     sc.close();
 
+    //Load data
     vtkUnstructuredGridReader vtk = new vtkUnstructuredGridReader(path);
-    ColorMapReader colormap = new ColorMapReader(localDir + "/octave_colormap.csv");
-    // load data
-
+    ColorMapReader colormap = new ColorMapReader(localDir + "/octave_colormap.csv" , isovalues);
     vtk.LoadReader();
     colormap.LoadColorMapReader();
-    MeshPanel drawPanel = new MeshPanel(width, height, vtk.Points(), vtk.Faces(), colormap.ColorMap(), type);
 
+    //Draw
+    MeshPanel drawPanel = new MeshPanel(width, height, vtk.Points(), vtk.Faces(), colormap.ColorMap(), type, colormap.isovaules());
     sf.setTitle("Plot");
     sf.add(drawPanel, BorderLayout.CENTER);
     sf.pack();

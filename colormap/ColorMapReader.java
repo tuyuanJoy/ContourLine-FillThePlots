@@ -8,13 +8,18 @@ import java.util.Scanner;
 public class ColorMapReader{
     private ArrayList<ColorMap> colormap;
     private String path;
+    private double[] isovaules;
 
-    public ColorMapReader(String path){
+    public ColorMapReader(String path, double[] isovaules){
         this.path = path;
         colormap = new ArrayList <ColorMap> ();
+        this.isovaules = isovaules;
     }
     public ArrayList<ColorMap> ColorMap(){
         return colormap;
+    }
+    public double[] isovaules(){
+        return isovaules;
     }
     public void LoadColorMapReader(){
         try{
@@ -33,13 +38,13 @@ public class ColorMapReader{
                 g = Double.parseDouble(numbers.get(2));
                 b = Double.parseDouble(numbers.get(3));
             
+                //Rescale color from [0-1] t0 [0-255]
                 int red, blue, green;
                 red = (int)(r*255 );
                 blue = (int)(b*255 );
                 green = (int)(g*255 );
                 
                 colormap.add(new ColorMap(isovalue,red,green,blue));
-
             }
             Reader.close();
         } catch (FileNotFoundException e){
