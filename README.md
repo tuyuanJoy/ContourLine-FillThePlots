@@ -1,5 +1,5 @@
 # ContourLine-FillThePlots
-It's a project from course Java 2D3D. The algorithm is implemented to draw contour lines and fill the contour plots with JAVA 2D API for give vtk data.
+The algorithm is implemented to draw contour lines and fill the contour plots with JAVA 2D API for give vtk data.
 
 ## Read Data 
 In this project, data-set format is [vtk](https://vtk.org/). However, vtk java API is not used. 
